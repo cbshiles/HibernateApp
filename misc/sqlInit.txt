@@ -1,0 +1,9 @@
+CREATE DATABASE test;
+USE test;
+
+CREATE TABLE `user` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+`name` varchar(63) NOT NULL,
+`link` INT UNSIGNED,
+PRIMARY KEY (`id`)
+);
