@@ -29,15 +29,12 @@ public class Application {
 	private String name;
 	
 	//private static final Logger logger = LoggerFactory.getLogger(Application.class);
+	
+	//! Change print statements to logging statements
 
     public static void main(String[] args) throws Exception {
     	//logger.trace("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
         SpringApplication.run(Application.class, args);
-    	//loadParams("app.properties");
-    	
-    	
-    	
-        //System.out.println( "Hello, "+properties.getProperty("name")+"!" );
     }
     
     @Autowired UserDao userDao;
@@ -45,11 +42,7 @@ public class Application {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-
-        	//printBeans(ctx);
-        	
-//        	userDao.createUser("Bob", null);
-        	System.out.println("exit~");
+        	System.out.println("Application started");
         };
     }
     
