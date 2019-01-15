@@ -2,6 +2,7 @@
 bin/
 target/
 tmp/
+logs/
 *.tmp
 *.bak
 *.swp

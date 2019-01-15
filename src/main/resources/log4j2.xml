@@ -13,34 +13,26 @@
 				</pattern>
 			</PatternLayout>
 		</Console>
-		<File name="File-Appender" fileName="${log-path}/dalog.log">
-			<PatternLayout>
-				<pattern>
-					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
-				</pattern>
-			</PatternLayout>
-		</File>
+		<RollingFile name="RollingFile-Appender"
+             fileName="${log-path}/rollingfile.log"
+             filePattern="${archive}/rollingfile.log.%d{yyyy-MM-dd-hh-mm}.gz">
+    		<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+        	<Policies>
+             	<TimeBasedTriggeringPolicy/>
+             	<SizeBasedTriggeringPolicy size="30 MB"/>
+        	</Policies>
+        	<DefaultRolloverStrategy max="30"/>
+		</RollingFile>
 	</Appenders>
 
 	<Loggers>
-		<Logger name="Shakti.HibernateApp.Log" level="info">
-			<AppenderRef ref="File-Appender" level="info" />
-		</Logger>
 		<Root level="debug">
 			<AppenderRef ref="Console-Appender" />
+			<AppenderRef ref="RollingFile-Appender" level="info" />
 		</Root>
 	</Loggers>
 </Configuration>
 
 <!-- 
-<RollingFile name="RollingFile-Appender"
-             fileName="${log-path}/rollingfile.log"
-             filePattern="${archive}/rollingfile.log.%d{yyyy-MM-dd-hh-mm}.gz">
-    <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
-        <Policies>
-             <TimeBasedTriggeringPolicy/>
-             <SizeBasedTriggeringPolicy size="30 MB"/>
-        </Policies>
-        <DefaultRolloverStrategy max="30"/>
-</RollingFile>
+
  -->

@@ -25,42 +25,27 @@ import Shakti.HibernateApp.daos.UserDao;
 @SpringBootApplication
 public class Application {
 	
-	@Value("${name:Joe}")
-	private String name;
-	
-	//private static final Logger logger = LoggerFactory.getLogger(Application.class);
-	
-	//! Change print statements to logging statements
+	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) throws Exception {
-    	//logger.trace("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
         SpringApplication.run(Application.class, args);
     }
-    
-    @Autowired UserDao userDao;
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-        	System.out.println("Application started");
+        	logger.info("Application started");
         };
     }
     
     //List beans that Spring boot is aware of
     private static void printBeans(ApplicationContext ctx) {
-        System.out.println("Let's inspect the beans provided by Spring Boot:");
+        logger.debug("Let's inspect the beans provided by Spring Boot:");
         String[] beanNames = ctx.getBeanDefinitionNames();
         Arrays.sort(beanNames);
         for (String beanName : beanNames) {
-            System.out.println(beanName);
+        	logger.debug(beanName);
         }
     }
-
-	
-	public static Properties properties = new Properties();
-	
-	public static void loadParams(String fname) throws IOException{
-		properties.load(Application.class.getResourceAsStream(fname));
-	}
 	
 }

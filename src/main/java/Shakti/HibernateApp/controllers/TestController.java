@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import Shakti.HibernateApp.Application;
 import Shakti.HibernateApp.User;
 import Shakti.HibernateApp.daos.UserDao;
 
 @RestController
 public class TestController {
+	
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired UserDao userDao;
 	
@@ -48,14 +51,13 @@ public class TestController {
     	}
     }
     
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @RequestMapping("/4j")
     String index2(){
         logger.debug("This is a debug message");
         logger.info("This is an info message");
         logger.warn("This is a warn message");
         logger.error("This is an error message");
-        return "index";
+        return "log test";
     }
 
 }

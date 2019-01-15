@@ -13,7 +13,10 @@ import javax.annotation.PostConstruct;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -32,6 +35,8 @@ public class AppTest extends TestCase {
 	
 	@Autowired UserDao userDao;
 	
+	private static final Logger log = LoggerFactory.getLogger(AppTest.class);
+	
     @Autowired
     private MockMvc mvc;
 	
@@ -44,7 +49,7 @@ public class AppTest extends TestCase {
 	public void createUser() {
 		String name = "Sam";
 		User u = userDao.createUser(name, null);
-		System.out.println("Sam id: "+u.getId());
+		log.debug("Sam id: "+u.getId());
 	    assertThat(u.getName()).isEqualTo(name);
 	}
 	
@@ -76,4 +81,12 @@ public class AppTest extends TestCase {
         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$[0].name", is("Bob")));
     }
+    
+	@Value("${test:Joe}")
+	private String test;
+	
+	@Test
+	public void propertiesTest() {
+		assertThat(test).isEqualTo("property");
+	}
 }
