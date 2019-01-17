@@ -7,20 +7,23 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import Shakti.HibernateApp.Application;
-import Shakti.HibernateApp.User;
 import Shakti.HibernateApp.daos.UserDao;
+import Shakti.HibernateApp.entities.User;
 
 @RestController
 public class TestController {
 	
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Autowired UserDao userDao;
+	@Autowired 
+	UserDao userDao;
 	
     @RequestMapping("/")
     public String index() {
@@ -51,6 +54,28 @@ public class TestController {
     	}
     }
     
+    @Value("${google.clientId}")
+    private String clientId;
+    
+    @RequestMapping("/google-login")
+    public String login() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("<!DOCTYPE>");
+    	sb.append("<html>");
+    	sb.append("<head>");
+    	sb.append("<meta name=\"google-signin-client_id\" content=\""+clientId+"\">");
+    	sb.append("<script src=\"https://apis.google.com/js/platform.js\" async defer></script>");
+    	sb.append("<script>");
+    	sb.append("function onSignIn(googleUser) {\n    		  var profile = googleUser.getBasicProfile();\n    		  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.\n    		  console.log('Name: ' + profile.getName()); \n console.log('Image URL: ' + profile.getImageUrl());\n    		  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present. }");
+    	sb.append("</script>");
+    	sb.append("</head>");
+    	sb.append("<body>");
+    	sb.append("<div class=\"g-signin2\" data-onsuccess=\"onSignIn\"></div>\n");
+    	sb.append("</body>");
+    	sb.append("</html>");
+    	return sb.toString();
+    }
+    
     @RequestMapping("/4j")
     String index2(){
         logger.debug("This is a debug message");
@@ -58,6 +83,13 @@ public class TestController {
         logger.warn("This is a warn message");
         logger.error("This is an error message");
         return "log test";
+    }
+    
+    @RequestMapping("/howdy")
+    @ResponseBody
+    public String home() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return "Welcome, " + username;
     }
 
 }

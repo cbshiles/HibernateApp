@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.*;
 
-import Shakti.HibernateApp.User;
+import Shakti.HibernateApp.entities.User;
 
 public interface UserRepository extends Repo<User, Integer> {
 	

@@ -1,6 +1,5 @@
 package Shakti.HibernateApp;
 
-import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -10,7 +9,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -24,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import Shakti.HibernateApp.daos.UserDao;
+import Shakti.HibernateApp.entities.User;
 import junit.framework.TestCase;
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -33,9 +32,10 @@ import static org.hamcrest.CoreMatchers.is;
 @AutoConfigureMockMvc
 public class AppTest extends TestCase {
 	
-	@Autowired UserDao userDao;
-	
 	private static final Logger log = LoggerFactory.getLogger(AppTest.class);
+	
+	@Autowired 
+	private UserDao userDao;
 	
     @Autowired
     private MockMvc mvc;

@@ -1,32 +1,22 @@
 package Shakti.HibernateApp;
 
-import java.io.*;
-import java.util.Properties;
-
-/**
- * Hello world!
- *
- */
-
 import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import Shakti.HibernateApp.daos.UserDao;
-
 @SpringBootApplication
 public class Application {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
+	private static boolean beanThink = false;
+	
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
     }
@@ -35,6 +25,9 @@ public class Application {
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
         	logger.info("Application started");
+        	if (beanThink) {
+        		printBeans(ctx);
+        	}
         };
     }
     

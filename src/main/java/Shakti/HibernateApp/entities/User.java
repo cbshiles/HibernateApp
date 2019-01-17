@@ -1,4 +1,4 @@
-package Shakti.HibernateApp;
+package Shakti.HibernateApp.entities;
 
 import javax.persistence.*;
 

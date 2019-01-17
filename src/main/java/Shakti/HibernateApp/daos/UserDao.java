@@ -2,17 +2,14 @@ package Shakti.HibernateApp.daos;
 
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import Shakti.HibernateApp.User;
+import Shakti.HibernateApp.entities.User;
 import Shakti.HibernateApp.repositories.UserRepository;
 
 @Service
