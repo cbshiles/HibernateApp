@@ -21,6 +21,6 @@ public class Props {
 	private String port;
 	
 	public String getRedirectUri() {
-		return baseUri+":"+port+redirectPath;
+	    return baseUri+/*":"+port+*/redirectPath;
 	}
 }

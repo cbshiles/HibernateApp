@@ -1,10 +1,15 @@
 package Shakti.HibernateApp.id;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -38,6 +43,8 @@ import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 
 public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenIdConnectFilter.class);
     
     @Value("${google.jwkUrl}")
     private String jwkUrl;    
@@ -83,7 +90,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     
 	@SuppressWarnings("unchecked")
 	private Map<String, String> mapAuthInfo(Jwt jwt) throws JsonParseException, JsonMappingException, IOException{
-    	return new ObjectMapper().readValue(jwt.getClaims(), Map.class);
+	    TypeReference<HashMap<String,String>> typeRef = new TypeReference<HashMap<String,String>>() {};
+	    log.info(jwt.getClaims());
+	    return new ObjectMapper().readValue(jwt.getClaims(), typeRef);
     }
      
     private RsaVerifier verifier(String kid) throws InvalidTokenException {
@@ -97,9 +106,13 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     }
     
     public void verifyClaims(Map<String, String> claims) {
-        int exp = Integer.parseInt(claims.get("exp"));
+	String exps = claims.get("exp");
+        int exp = Integer.parseInt(exps);
         Date expireDate = new Date(exp * 1000L);
         Date now = new Date();
+	for (String key : claims.keySet()) {
+	    log.info("claim "+key+": "+claims.get(key));
+	}
         if (expireDate.before(now) || !claims.get("iss").equals(issuer) || 
           !claims.get("aud").equals(clientId)) {
             throw new RuntimeException("Invalid claims");

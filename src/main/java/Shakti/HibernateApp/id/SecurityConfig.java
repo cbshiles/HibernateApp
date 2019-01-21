@@ -22,6 +22,8 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
+import Shakti.HibernateApp.Props;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,12 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
     private OAuth2RestTemplate restTemplate;
 	
-	@Value ("${app.redirectPath}")
-	private String redirectPath;
- 
+    /*	@Value ("${app.redirectPath}")
+	private String redirectPath;*/
+
+    @Autowired
+    private Props props;
+    
     @Bean
     public OpenIdConnectFilter openIdConnectFilter() {
-        OpenIdConnectFilter filter = new OpenIdConnectFilter(redirectPath);
+        OpenIdConnectFilter filter = new OpenIdConnectFilter(props.getRedirectUri());
         filter.setRestTemplate(restTemplate);
         return filter;
     }
@@ -78,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .addFilterAfter(openIdConnectFilter(), 
           OAuth2ClientContextFilter.class)
         .httpBasic()
-        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(redirectPath))
+        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(props.getRedirectUri()))
         .and()
         .authorizeRequests()
         .anyRequest().authenticated();
