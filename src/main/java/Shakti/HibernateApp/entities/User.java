@@ -7,14 +7,14 @@ import javax.persistence.*;
 public class User {
 	
 	private int id;
-	private String name;
-	private Integer link;
+	private String name, password, salt;
 	
 	public User() {}
 	
-	public User(String n, Integer l) {
+	public User(String n, String p, String s) {
 		name = n;
-		link = l;
+		password = p;
+		salt = s;
 	}
 	
 	@Id
@@ -35,12 +35,20 @@ public class User {
 		name = n;
 	}
 	
-	public Integer getLink() {
-		return link;
+	public String getPassword() {
+		return password;
 	}
 	
-	public void setLink(Integer uid) {
-		link = uid;
+	public void setPassword(String pass) {
+		password = pass;
+	}
+	
+	public String getSalt() {
+		return salt;
+	}
+	
+	public void setSalt(String tlas) {
+		salt = tlas;
 	}
 
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import Shakti.HibernateApp.daos.UserDao;
 import Shakti.HibernateApp.entities.User;
 
 @RestController
@@ -25,12 +24,10 @@ public class TestController /* implements ErrorController*/ {
 	
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Autowired 
-	UserDao userDao;
 	
     @RequestMapping("/")
     public String index() {
-    	userDao.createUser("Chuck", null);
+    	//userDao.createUser("Chuck", null);
         return "Greetings from Spring Boot!";
     }
 
@@ -48,18 +45,18 @@ public class TestController /* implements ErrorController*/ {
     
     @RequestMapping("/truncate")
     public String truncate() {
-    	userDao.truncate();
+    	//userDao.truncate();
     	return "User table cleared.";
     }
     
     @RequestMapping("/hello")
     public List<User> hello(){
     	List<User> lzt = new ArrayList<User>();
-    	lzt.add(userDao.createUser("Bob", null));
+    	//lzt.add(userDao.createUser("Bob", null));
     	return lzt;
     }
     
-    @RequestMapping("/user")
+/*    @RequestMapping("/user")
     public User getUser(@RequestParam int id) {
     	Optional<User> u = userDao.find(id);
     	if (u.isPresent()) {
@@ -67,7 +64,7 @@ public class TestController /* implements ErrorController*/ {
     	} else {
     		return null;
     	}
-    }
+    }*/
     
     @Value("${google.clientId}")
     private String clientId;

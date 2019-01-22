@@ -1,9 +1,31 @@
+-- Note: this script clears & rebuilds the db from scratch
+DROP DATABASE test2;
 CREATE DATABASE test2;
+ALTER DATABASE test2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE test2;
 
 CREATE TABLE `user` (
 `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-`name` varchar(63) NOT NULL,
-`link` INT UNSIGNED,
+`name` varchar(60) NOT NULL,
+`pass` varchar(60) NOT NULL,
+`salt` varchar(60) NOT NULL,
+PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `role` (
+`id` varchar(16) NOT NULL,
+`description` varchar(120) NOT NULL,
+PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `user_to_role` (
+`role_id` varchar(16) NOT NULL,
+`user_id` INT UNSIGNED NOT NULL,
+PRIMARY KEY (`user_id`, `role_id`)
+);
+
+CREATE TABLE `stuff` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+`n` INT,
 PRIMARY KEY (`id`)
 );

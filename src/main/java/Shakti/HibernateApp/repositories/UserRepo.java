@@ -6,13 +6,8 @@ import org.springframework.data.jpa.repository.*;
 
 import Shakti.HibernateApp.entities.User;
 
-public interface UserRepository extends Repo<User, Integer> {
+public interface UserRepo extends Repo<User, Integer> {
 	
-	@Modifying
-	@Query("DELETE FROM User")
-	void truncate();
-	
-	List<User> findByLink(Integer link);
-	
+	List<User> findByName(String name);
 
 }
