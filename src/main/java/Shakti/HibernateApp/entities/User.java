@@ -1,25 +1,28 @@
 package Shakti.HibernateApp.entities;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User{
 	
 	private int id;
-	private String name, password, salt;
+	private String name, pass;
 	
 	public User() {}
 	
-	public User(String n, String p, String s) {
+	public User(String n, String p) {
 		name = n;
-		password = p;
-		salt = s;
+		pass = p;
 	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getId() {
+	public int getId(){
 		return id;
 	}
 	
@@ -27,28 +30,24 @@ public class User {
 		id = i;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
 	public void setName(String n) {
 		name = n;
 	}
 	
-	public String getPassword() {
-		return password;
+	public String getName() {
+		return name;
 	}
 	
-	public void setPassword(String pass) {
-		password = pass;
+	public String getPass() {
+		return pass;
 	}
 	
-	public String getSalt() {
-		return salt;
+	public void setPass(String p) {
+		pass = p;
 	}
-	
-	public void setSalt(String tlas) {
-		salt = tlas;
-	}
+
+
+
+
 
 }

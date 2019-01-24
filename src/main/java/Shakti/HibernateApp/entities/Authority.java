@@ -1,20 +1,22 @@
 package Shakti.HibernateApp.entities;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name = "role")
-public class Role {
+@Table(name = "authority")
+public class Authority implements GrantedAuthority{
 	
+	private static final long serialVersionUID = 2872444021517872036L;
 	private String id, description;
 	
-	public Role() {}
+	public Authority() {}
 	
-	public Role(String i, String d) {
+	public Authority(String i, String d) {
 		id = i;
 		description = d;
 	}
@@ -34,6 +36,12 @@ public class Role {
 	
 	public void setDescription(String d) {
 		description = d;
+	}
+
+	@Transient
+	@Override
+	public String getAuthority() {
+		return id;
 	}
 
 }

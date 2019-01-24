@@ -8,20 +8,20 @@ CREATE TABLE `user` (
 `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 `name` varchar(60) NOT NULL,
 `pass` varchar(60) NOT NULL,
-`salt` varchar(60) NOT NULL,
 PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `role` (
+CREATE TABLE `authority` (
 `id` varchar(16) NOT NULL,
 `description` varchar(120) NOT NULL,
 PRIMARY KEY (`id`)
 );
+INSERT INTO `authority` (id, description) values ( 'USER', 'Basic user privileges');
 
-CREATE TABLE `user_to_role` (
-`role_id` varchar(16) NOT NULL,
+CREATE TABLE `user_to_authority` (
+`authority_id` varchar(16) NOT NULL,
 `user_id` INT UNSIGNED NOT NULL,
-PRIMARY KEY (`user_id`, `role_id`)
+PRIMARY KEY (`user_id`, `authority_id`)
 );
 
 CREATE TABLE `stuff` (

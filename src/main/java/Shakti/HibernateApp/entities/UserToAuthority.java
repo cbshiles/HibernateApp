@@ -9,16 +9,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_to_role")
-public class UserToRole {
+@Table(name = "user_to_authority")
+public class UserToAuthority {
 	
 	@EmbeddedId
-	UserToRoleId id;
+	UserToAuthorityId id;
 	
-	public UserToRole() {}
+	public UserToAuthority() {}
 	
-	public UserToRole(int u, String r) {
-		id = new UserToRoleId(u, r);
+	public UserToAuthority(int u, String r) {
+		id = new UserToAuthorityId(u, r);
 	}
 	
 	public int getUserId() {
@@ -29,30 +29,30 @@ public class UserToRole {
 		id.userId = u;
 	}
 
-	public String getRoleId() {
-		return id.roleId;
+	public String getAuthorityId() {
+		return id.authorityId;
 	}
 	
-	public void setRoleId(String r) {
-		id.roleId = r;
+	public void setAuthorityId(String r) {
+		id.authorityId = r;
 	}
 	
 	@Embeddable
-	public static class UserToRoleId implements Serializable {
+	public static class UserToAuthorityId implements Serializable {
 
 		private static final long serialVersionUID = 4041938521460858618L;
 		
 		@Column(name = "user_id", nullable = false)
 		protected int userId;
 		
-		@Column(name = "role_id", nullable = false)
-		protected String roleId;
+		@Column(name = "authority_id", nullable = false)
+		protected String authorityId;
 		
-		public UserToRoleId() {}
+		public UserToAuthorityId() {}
 		
-		public UserToRoleId(int u, String r) {
+		public UserToAuthorityId(int u, String r) {
 			userId = u;
-			roleId = r;
+			authorityId = r;
 		}
 		
 		@Override
@@ -60,8 +60,8 @@ public class UserToRole {
 			if (o == null) return false;
 			if (o == this) return true;
 			if (getClass() != o.getClass()) return false;
-			UserToRoleId oid = (UserToRoleId)o;
-			return userId == oid.userId && roleId.equals(oid.roleId);
+			UserToAuthorityId oid = (UserToAuthorityId)o;
+			return userId == oid.userId && authorityId.equals(oid.authorityId);
 		}
 		
 		@Override
@@ -69,7 +69,7 @@ public class UserToRole {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result	+ (((Integer)userId).hashCode());
-			result = prime * result	+ roleId.hashCode();
+			result = prime * result	+ authorityId.hashCode();
 			return result;
 		}
 

@@ -1,11 +1,13 @@
-package Shakti.HibernateApp.id;
+package Shakti.HibernateApp.auth;
 
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -16,30 +18,25 @@ import Shakti.HibernateApp.Props;
 
 @Configuration
 @EnableOAuth2Client
-public class GoogleOpenIdConnectConfig {
+//@AutoConfigureOrder(4)
+public class ClientConfig {
 	
-    @Value("${google.clientId}")
+    @Value("${app.clientId}")
     private String clientId;
  
-    @Value("${google.clientSecret}")
+    @Value("${app.clientSecret}")
     private String clientSecret;
- 
-    @Value("${google.accessTokenUri}")
-    private String accessTokenUri;
- 
-    @Value("${google.userAuthorizationUri}")
-    private String userAuthorizationUri;
     
     @Autowired
     private Props props;
- 
-    @Bean
-    public OAuth2ProtectedResourceDetails googleOpenId() {
+	
+    @Bean // does need to be a bean?
+    public OAuth2ProtectedResourceDetails getResourceDetails() {
         AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
         details.setClientId(clientId);
         details.setClientSecret(clientSecret);
-        details.setAccessTokenUri(accessTokenUri);
-        details.setUserAuthorizationUri(userAuthorizationUri);
+        details.setAccessTokenUri(props.tokenUri());
+        details.setUserAuthorizationUri(props.authUri());
         details.setScope(Arrays.asList("openid", "email"));
         details.setPreEstablishedRedirectUri(props.redirectUri());
         details.setUseCurrentUri(false);
@@ -47,7 +44,8 @@ public class GoogleOpenIdConnectConfig {
     }
  
     @Bean
-    public OAuth2RestTemplate googleOpenIdTemplate(OAuth2ClientContext clientContext) {
-        return new OAuth2RestTemplate(googleOpenId(), clientContext);
+    public OAuth2RestTemplate oAuthTemplate(OAuth2ClientContext clientContext) {
+        return new OAuth2RestTemplate(getResourceDetails(), clientContext);
     }
+
 }

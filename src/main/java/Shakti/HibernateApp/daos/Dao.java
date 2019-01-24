@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import Shakti.HibernateApp.entities.Stuff;
 import Shakti.HibernateApp.repositories.Repo;
 
 public class Dao <V, K> {

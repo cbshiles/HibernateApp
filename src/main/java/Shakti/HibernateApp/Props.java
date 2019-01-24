@@ -11,16 +11,40 @@ import org.springframework.stereotype.Service;
 @Service
 public class Props {
 	
-	@Value ("${app.redirectPath}")
-	private String redirectPath;
-	
 	@Value ("${app.baseUri}")
 	private String baseUri;
 	
-	@Value("${server.port}")
-	private String port;
+	@Value ("${app.redirectPath}")
+	private String redirectPath;
 	
-	public String getRedirectUri() {
-	    return baseUri+/*":"+port+*/redirectPath;
+	@Value ("${app.tokenPath}")
+	private String tokenPath;
+	
+	@Value ("${app.authPath}")
+	private String authPath;
+	
+	@Value ("${app.jwkPath}")
+	private String jwkPath;
+	
+	
+	public String redirectUri() {
+	    return baseUri+redirectPath;
 	}
+	
+	public String tokenUri() {
+	    return baseUri+tokenPath;
+	}
+	
+	public String authUri() {
+	    return baseUri+authPath;
+	}
+	
+	public String jwkUri() {
+	    return baseUri+jwkPath;
+	}
+	
+	public String issuer() {
+		return baseUri;
+	}
+
 }
