@@ -42,7 +42,7 @@ public class TokenController {
         		.map(OAuth2AccessToken::getValue).collect(Collectors.toList());
     }
     
-    @RequestMapping("/auth")
+    @RequestMapping("/auth_old")
     @ResponseBody
     public List<String> getToken() {
         Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId("sampleClientId");

@@ -44,17 +44,14 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 	
 	@Override
 	public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
-	        clients.withClientDetails(clientDetailsService);
-//	            .inMemory()
-//	                .withClient(clientId)
-//	                    .authorizedGrantTypes("password", "refresh_token")
-//	                    .authorities("USER")
-//	                    .scopes("read", "write")
-//	                    .resourceIds("resourcee")
-//	                    .secret(clientSecret);
-	        // @formatter:on
-	    
-		
+	        //clients.withClientDetails(clientDetailsService);
+	            clients.inMemory()
+	                .withClient(clientId)
+	                    .authorizedGrantTypes("password", "refresh_token")
+	                    .authorities("USER")
+	                    .scopes("read", "write")
+	                    .resourceIds("resource")
+	                    .secret(clientSecret);
 	}
 	
 	@Autowired
@@ -69,11 +66,12 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 		.authenticationManager(authMan);
 	}
 	
+	/**/
 	private static String REALM="CRM_REALM";
 	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-	    oauthServer.realm(REALM);
+	    //oauthServer.realm(REALM);
 	    
 	    //.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_TRUSTED_CLIENT')")
 	      //         .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
@@ -87,7 +85,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 		handler.setClientDetailsService(clientDetailsService);
 		return handler;
 	}
-    
+ 
     @Bean
     @Primary
     public DefaultTokenServices tokenServices() {
@@ -96,15 +94,11 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
         defaultTokenServices.setSupportRefreshToken(false);
         return defaultTokenServices;
     }
+   
 
     @Bean
     public TokenStore tokenStore() {
     	return new InMemoryTokenStore();
     }
-
-    
-
-    
- 
 
 }

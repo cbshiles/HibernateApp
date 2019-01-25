@@ -20,8 +20,8 @@ function errFunc(err) {
     console.log(err);
 }
 
-function connectSuccess(){
-	console.log('success');
+function connectSuccess(data){
+	console.log('success'+data);
 //document.getElementById("transmit").disabled = false	
 //document.getElementById("nsfwTransmit").disabled = false	
 //location.reload()
@@ -36,7 +36,7 @@ function send() {
 		type : 'POST',
 		async : true,
 		error : errFunc,
-		url : "auth",
+		url : "/auth",
 		contentType: "application/json; charset=utf-8",
 		data : m,
 		success : connectSuccess

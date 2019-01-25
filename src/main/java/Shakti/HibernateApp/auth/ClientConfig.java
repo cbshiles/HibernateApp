@@ -18,7 +18,6 @@ import Shakti.HibernateApp.Props;
 
 @Configuration
 @EnableOAuth2Client
-//@AutoConfigureOrder(4)
 public class ClientConfig {
 	
     @Value("${app.clientId}")
@@ -30,7 +29,7 @@ public class ClientConfig {
     @Autowired
     private Props props;
 	
-    @Bean // does need to be a bean?
+    @Bean
     public OAuth2ProtectedResourceDetails getResourceDetails() {
         AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
         details.setClientId(clientId);
