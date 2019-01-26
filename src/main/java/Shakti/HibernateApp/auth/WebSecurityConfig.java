@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -30,75 +31,69 @@ import org.springframework.context.annotation.Primary;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 	@Autowired
-    private UserDetailsSrvc detailsSrvc;
-	
+    private UserDetailsSrvc userDetailsSrvc;
+//	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 	    return new BCryptPasswordEncoder();
 	}
-	
-	
-	   @Bean
-	    public DaoAuthenticationProvider authenticationProvider() {
-	        DaoAuthenticationProvider authProvider
-	          = new DaoAuthenticationProvider();
-	        authProvider.setUserDetailsService(detailsSrvc);
-	        authProvider.setPasswordEncoder(passwordEncoder());
-	        return authProvider;
-	    }
-	    
+//	
+//	
+//	   @Bean
+//	    public DaoAuthenticationProvider authenticationProvider() {
+//	        DaoAuthenticationProvider authProvider
+//	          = new DaoAuthenticationProvider();
+//	        authProvider.setUserDetailsService(detailsSrvc);
+//	        authProvider.setPasswordEncoder(passwordEncoder());
+//	        return authProvider;
+//	    }
+//	    
 	   @Autowired
 	    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-	      auth.authenticationProvider(authenticationProvider());
+		   auth.userDetailsService(userDetailsSrvc).passwordEncoder(passwordEncoder());
 	    }
-	   
-	
-	   @Override
-	   @Bean(name="myAuthenticationManager")
-	   public AuthenticationManager authenticationManagerBean() throws Exception {
-	       return authenticationManager();
-	   }
-	   
-	
+//	   
+//	
+//	   @Override
+//	   @Bean(name="myAuthenticationManager")
+//	   public AuthenticationManager authenticationManagerBean() throws Exception {
+//	       return authenticationManager();
+//	   }
+//	   
+//	
 	@Value("${app.loginPath}")
 	private String loginPath;
-	
-	    @Autowired
-	    private Props props;
-		
-		@Autowired
-	    private OAuth2RestTemplate restTemplate;
-	    
-	    @Bean
-	    public ConnectionFilter openIdConnectFilter() {
-	    	ConnectionFilter cf = new ConnectionFilter(props.redirectUri(), restTemplate);
-	    	return cf;
-	    }
+//	
+//	    @Autowired
+//	    private Props props;
+//		
+//		@Autowired
+//	    private OAuth2RestTemplate restTemplate;
+//	    
+//	    @Bean
+//	    public ConnectionFilter openIdConnectFilter() {
+//	    	ConnectionFilter cf = new ConnectionFilter(props.redirectUri(), restTemplate);
+//	    	return cf;
+//	    }
 	 
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http.csrf().disable().authorizeRequests()
 	        .antMatchers("/close/**").authenticated()
 	        .antMatchers("/oauth/authorize").permitAll()
+	        .antMatchers("/oauth/token").permitAll()
 	        .antMatchers("/oauth/**").authenticated()
-	        .and()
-	        
-//	        .formLogin()
-//	        .loginPage("/login")
-//	        .loginProcessingUrl("/perform_login")
-//	        .defaultSuccessUrl("/",true)
-//	        .failureUrl("/login?error=true")
-//	        .and()
-	        
-	        .addFilterAfter(new OAuth2ClientContextFilter(), //try just addFilter here (remove class)
-	          AbstractPreAuthenticatedProcessingFilter.class)
-	        .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
-	        .httpBasic()	
-	        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginPath))
+	        .and()	        
+//	        .addFilterAfter(new OAuth2ClientContextFilter(),
+//	          AbstractPreAuthenticatedProcessingFilter.class)
+//	        .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
+	        //.httpBasic()	
+	        //.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginPath))
+	        .formLogin()
 	        .and()
 	        .authorizeRequests()
 	        .anyRequest().permitAll()
-	        ;//.and().csrf().disable(); //remove later
+	        ;
 	    }
 	    
 	    
@@ -108,5 +103,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	 		// Spring Security should completely ignore URLs starting with /resources/
 	 				.antMatchers("/resources/**");
 	 	}
+	    
+//	    @Bean
+//	    @Primary
+//	    public DefaultTokenServices tokenServices() {
+//	        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+//	        defaultTokenServices.setTokenStore(tokenStore());
+//	        defaultTokenServices.setSupportRefreshToken(false);
+//	        return defaultTokenServices;
+//	    }
+//	   
+//	
+//	    @Bean
+//	    public TokenStore tokenStore() {
+//	    	return new InMemoryTokenStore();
+//	    }
 
 }

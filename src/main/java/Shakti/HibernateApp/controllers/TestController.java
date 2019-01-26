@@ -103,7 +103,7 @@ public class TestController /* implements ErrorController*/ {
         return "log test";
     }
     
-    @RequestMapping("/howdy")
+    @RequestMapping("/close/howdy")
     @ResponseBody
     public String home() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
