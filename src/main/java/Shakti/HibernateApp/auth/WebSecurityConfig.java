@@ -25,9 +25,12 @@ import org.springframework.beans.factory.annotation.Value;
 import Shakti.HibernateApp.Props;
 import Shakti.HibernateApp.services.UserDetailsSrvc;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 
-@Configuration
 @EnableWebSecurity
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 	@Autowired
@@ -53,13 +56,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		   auth.userDetailsService(userDetailsSrvc).passwordEncoder(passwordEncoder());
 	    }
 //	   
-//	
-//	   @Override
-//	   @Bean(name="myAuthenticationManager")
-//	   public AuthenticationManager authenticationManagerBean() throws Exception {
-//	       return authenticationManager();
-//	   }
-//	   
+	
+	   @Override
+	   @Bean(name="myAuthenticationManager")
+	   public AuthenticationManager authenticationManagerBean() throws Exception {
+	       return authenticationManager();
+	   }
+	   
 //	
 	@Value("${app.loginPath}")
 	private String loginPath;
@@ -78,10 +81,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	 
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
-	        http.csrf().disable().authorizeRequests()
-	        .antMatchers("/close/**").authenticated()
-	        .antMatchers("/oauth/authorize").permitAll()
-	        .antMatchers("/oauth/token").permitAll()
+	        http
+	        .csrf().disable().authorizeRequests()
+	        //.antMatchers("/close/**").authenticated()
+	        //.antMatchers("/oauth/authorize").permitAll()
+	        //.antMatchers("/oauth/token").permitAll()
 	        .antMatchers("/oauth/**").authenticated()
 	        .and()	        
 //	        .addFilterAfter(new OAuth2ClientContextFilter(),
@@ -92,16 +96,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	        .formLogin()
 	        .and()
 	        .authorizeRequests()
-	        .anyRequest().permitAll()
+	        //.anyRequest().permitAll()
 	        ;
 	    }
 	    
 	    
 	    @Override
 	 	public void configure(WebSecurity web) throws Exception {
-	 		web.ignoring()
+	 		//web.ignoring().antMatchers(HttpMethod.OPTIONS, "/oauth/token");
 	 		// Spring Security should completely ignore URLs starting with /resources/
-	 				.antMatchers("/resources/**");
+	 				//.antMatchers("/resources/**");
 	 	}
 	    
 //	    @Bean

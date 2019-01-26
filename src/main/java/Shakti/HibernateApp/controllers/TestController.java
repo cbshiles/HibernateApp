@@ -46,7 +46,7 @@ public class TestController /* implements ErrorController*/ {
     	return "User table cleared.";
     }
     
-    @RequestMapping("/hello")
+    @RequestMapping("/close/hello")
     public List<User> hello(){
     	List<User> lzt = new ArrayList<User>();
     	//lzt.add(userDao.createUser("Bob", null));

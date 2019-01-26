@@ -1,6 +1,7 @@
 package Shakti.HibernateApp.auth;
 
 import java.util.ArrayList;
+import org.springframework.core.annotation.Order;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,63 +28,73 @@ import Shakti.HibernateApp.services.ClientDetailsSrvc;
 import Shakti.HibernateApp.services.UserDetailsSrvc;
 
 @Configuration
-//@EnableAuthorizationServer
+@EnableAuthorizationServer
+@Order(0)
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 	
 //	@Autowired
 //    @Qualifier("authenticationManagerBean")
 //    private AuthenticationManager authManager;
 //	
-//    @Value("${app.clientId}")
-//    private String clientId;
-// 
-//    @Value("${app.clientSecret}")
-//    private String clientSecret;
-//    
-//    @Autowired
-//    private UserDetailsSrvc userDetailsService;
-//	
+    @Value("${app.clientId}")
+    private String clientId;
+ 
+    @Value("${app.clientSecret}")
+    private String clientSecret;
+    
+    @Value("${app.redirectPath}")
+    private String redirectPath;
+
+    @Autowired
+    private ClientDetailsSrvc clientDetailsSrvc;
+    
+    @Autowired PasswordEncoder passwordEncoder;
+	
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 //    
-//	@Override
-//	public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
-//	        //clients.withClientDetails(clientDetailsService);
-//	            clients.inMemory()
-//	                .withClient(clientId)
-//	                    .authorizedGrantTypes("password", "refresh_token")
-//	                    .authorities("USER")
-//	                    .scopes("read", "write")
-//	                    .resourceIds("resource")
-//	                    .secret(clientSecret);
-//	}
-//	
+	@Override
+	public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
+//	        clients.withClientDetails(clientDetailsSrvc);
+	            clients.inMemory()
+	                .withClient(clientId)
+	                    .authorizedGrantTypes("authorization_code", /*"password",*/ "refresh_token")
+	                    .authorities("USER")
+	                    .redirectUris(redirectPath)
+	                    .scopes("read", "write")
+	                    .resourceIds("resource")
+	                    .secret(passwordEncoder.encode(clientSecret));
+	}
+	
 //	@Autowired
-//  private AuthenticationManager authMan;
+ // private AuthenticationManager authMan;
 //	
-//	@Override
-//	public void configure(AuthorizationServerEndpointsConfigurer endpoints)
-//            throws Exception{
-//		endpoints
-//		.tokenStore(tokenStore())
-//		//.userApprovalHandler(userApprovalHandler())
-//		.authenticationManager(authMan)
-//		.userDetailsService(userDetailsService);
-//	}
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints)
+            throws Exception{
+		endpoints
+		.tokenStore(tokenStore())
+		//.userApprovalHandler(userApprovalHandler())
+		//.authenticationManager(authMan)
+		//.clientDetailsService(clientDetailsSrvc);
+		;
+	}
 //	
+	
+	
 //	/**/
 //	private static String REALM="CRM_REALM";
 //	
-//	@Override
-//	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-//		
-//		oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()").passwordEncoder(passwordEncoder);
-//
-//	    //oauthServer.realm(REALM);
-//	    
-//	    //.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_TRUSTED_CLIENT')")
-//	      //         .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
-//	}
+	@Override
+	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+		
+		oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");//.passwordEncoder(passwordEncoder);
+
+	    //oauthServer.realm(REALM);
+	    
+	    //.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_TRUSTED_CLIENT')")
+	      //         .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
+	}
 //	
 ////	@Bean
 ////	TokenStoreUserApprovalHandler userApprovalHandler() {
@@ -94,19 +105,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 ////		return handler;
 ////	}
 // 
-//    @Bean
-//    @Primary
-//    public DefaultTokenServices tokenServices() {
-//        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-//        defaultTokenServices.setTokenStore(tokenStore());
-//        defaultTokenServices.setSupportRefreshToken(false);
-//        return defaultTokenServices;
-//    }
-//   
-//
-//    @Bean
-//    public TokenStore tokenStore() {
-//    	return new InMemoryTokenStore();
-//    }
+    @Bean
+    @Primary
+    public DefaultTokenServices tokenServices() {
+        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setSupportRefreshToken(false);
+        return defaultTokenServices;
+    }
+   
+
+    @Bean
+    public TokenStore tokenStore() {
+    	return new InMemoryTokenStore();
+    }
 
 }
