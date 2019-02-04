@@ -86,15 +86,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	        //.antMatchers("/close/**").authenticated()
 	        //.antMatchers("/oauth/authorize").permitAll()
 	        //.antMatchers("/oauth/token").permitAll()
-	        .antMatchers("/oauth/**").authenticated()
+	        //.antMatchers("/oauth/token").permitAll()
+	        .antMatchers("/oauth/authorize").authenticated()
 	        .and()	        
 //	        .addFilterAfter(new OAuth2ClientContextFilter(),
 //	          AbstractPreAuthenticatedProcessingFilter.class)
 //	        .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
 	        //.httpBasic()	
 	        //.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginPath))
-	        .formLogin()
-	        .and()
+	        .formLogin().and()
 	        .authorizeRequests()
 	        //.anyRequest().permitAll()
 	        ;

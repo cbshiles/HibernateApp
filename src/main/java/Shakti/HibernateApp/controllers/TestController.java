@@ -46,6 +46,23 @@ public class TestController /* implements ErrorController*/ {
     	return "User table cleared.";
     }
     
+    //landing page between authorize & token OAuth endpoints
+    @RequestMapping("/landing")
+    public String land() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("<!DOCTYPE>");
+    	sb.append("<html>");
+    	sb.append("<head>");
+
+    	sb.append("</head>");
+    	sb.append("<body>");
+    	String d = " ~ ";
+    	sb.append("<div class=\"g-signin2\" data-onsuccess=\"onSignIn\"></div>\n");
+    	sb.append("</body>");
+    	sb.append("</html>");
+    	return sb.toString();
+    }
+    
     @RequestMapping("/close/hello")
     public List<User> hello(){
     	List<User> lzt = new ArrayList<User>();

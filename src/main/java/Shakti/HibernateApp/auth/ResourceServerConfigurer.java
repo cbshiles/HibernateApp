@@ -14,7 +14,7 @@ public class ResourceServerConfigurer extends ResourceServerConfigurerAdapter {
         http.antMatcher("/close/**")//.antMatchers("/**").hasRole("USER").and().formLogin()
         //.access("#oauth2.hasScope('read')").antMatchers("/**").hasRole("USER").and().formLogin()
                 .authorizeRequests()
-                //.anyRequest().authenticated()
+                .anyRequest().authenticated()
          //       .and()
                 ;
     }
