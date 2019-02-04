@@ -32,6 +32,9 @@ import org.springframework.http.HttpMethod;
 @EnableWebSecurity
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+	
+	@Value("${app.loginPath}")
+	private String loginPath;
 		
 	@Autowired
     private UserDetailsSrvc userDetailsSrvc;
@@ -63,22 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	       return authenticationManager();
 	   }
 	   
-//	
-	@Value("${app.loginPath}")
-	private String loginPath;
-//	
-//	    @Autowired
-//	    private Props props;
-//		
-//		@Autowired
-//	    private OAuth2RestTemplate restTemplate;
-//	    
-//	    @Bean
-//	    public ConnectionFilter openIdConnectFilter() {
-//	    	ConnectionFilter cf = new ConnectionFilter(props.redirectUri(), restTemplate);
-//	    	return cf;
-//	    }
-	 
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http
@@ -107,20 +94,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	 		// Spring Security should completely ignore URLs starting with /resources/
 	 				//.antMatchers("/resources/**");
 	 	}
-	    
-//	    @Bean
-//	    @Primary
-//	    public DefaultTokenServices tokenServices() {
-//	        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-//	        defaultTokenServices.setTokenStore(tokenStore());
-//	        defaultTokenServices.setSupportRefreshToken(false);
-//	        return defaultTokenServices;
-//	    }
-//	   
-//	
-//	    @Bean
-//	    public TokenStore tokenStore() {
-//	    	return new InMemoryTokenStore();
-//	    }
 
 }

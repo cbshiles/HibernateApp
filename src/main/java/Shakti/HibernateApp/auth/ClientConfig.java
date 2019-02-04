@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -30,13 +32,15 @@ public class ClientConfig {
     private Props props;
 	
     @Bean
+    @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
     public OAuth2ProtectedResourceDetails getResourceDetails() {
         AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
+        //details.setId("clientId");
         details.setClientId(clientId);
         details.setClientSecret(clientSecret);
         details.setAccessTokenUri(props.tokenUri());
         details.setUserAuthorizationUri(props.authUri());
-        details.setScope(Arrays.asList("openid", "email"));
+        details.setScope(Arrays.asList("read", "write"));
         details.setPreEstablishedRedirectUri(props.redirectUri());
         details.setUseCurrentUri(false);
         return details;

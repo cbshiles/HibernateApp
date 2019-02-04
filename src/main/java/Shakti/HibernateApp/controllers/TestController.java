@@ -5,22 +5,44 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import Shakti.HibernateApp.daos.StuffDao;
 import Shakti.HibernateApp.entities.User;
 
 @RestController
-public class TestController /* implements ErrorController*/ {
+public class TestController {
+	
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    
+    @Value("${app.clientId}")
+    private String clientId;
+    
+    @Value("${app.clientSecret}")
+    private String clientSecret;
 
-    private static final String PATH = "/error";
+    @Value("${app.tokenRedirect}")
+    private String tokenRedirect;
 	
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+    @Autowired
+    private OAuth2RestTemplate oauthTemplate;
+    
+    @Autowired
+    StuffDao stuffDao;
 	
     @RequestMapping("/")
     public String index() {
@@ -28,27 +50,40 @@ public class TestController /* implements ErrorController*/ {
         return "Greetings from Spring Boot!";
     }
 
-    /*
-    @RequestMapping(value = PATH)
-    public String error(){
-	return "Error page.";
-    }
-
-    @Override
-    public String getErrorPath() {
-        return PATH;
-    }
-    */
     
-    @RequestMapping("/truncate")
+    @RequestMapping("/close/truncate")
     public String truncate() {
-    	//userDao.truncate();
+    	stuffDao.truncate();
     	return "User table cleared.";
     }
     
     //landing page between authorize & token OAuth endpoints
     @RequestMapping("/landing")
-    public String land() {
+    public String land(@RequestParam(required = false) String code) {
+    	
+      	UriComponentsBuilder builder = 
+    			UriComponentsBuilder.fromHttpUrl("http://localhost:8080/oauth/authorize")
+    	        .queryParam("grant_type", "authorization_code")
+    	        .queryParam("client_id", clientId)
+    	        .queryParam("password", clientSecret)
+    	        .queryParam("redirect_uri", tokenRedirect);
+    	
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+    	HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    	String url = builder.toUriString();
+    	ResponseEntity<String> result;
+    	try {
+    	result = oauthTemplate.exchange
+    			(builder.toUriString(), HttpMethod.POST, entity, String.class);
+    	
+    	} catch (Exception ex) {
+    		log.debug(ex.getMessage());
+    	}
+    	
+    	OAuth2AccessToken result2 = oauthTemplate.getAccessToken();
+    	
     	StringBuilder sb = new StringBuilder();
     	sb.append("<!DOCTYPE>");
     	sb.append("<html>");
@@ -56,8 +91,7 @@ public class TestController /* implements ErrorController*/ {
 
     	sb.append("</head>");
     	sb.append("<body>");
-    	String d = " ~ ";
-    	sb.append("<div class=\"g-signin2\" data-onsuccess=\"onSignIn\"></div>\n");
+    	sb.append("<p>"+code+"</p>");
     	sb.append("</body>");
     	sb.append("</html>");
     	return sb.toString();
@@ -70,53 +104,12 @@ public class TestController /* implements ErrorController*/ {
     	return lzt;
     }
     
-/*    @RequestMapping("/user")
-    public User getUser(@RequestParam int id) {
-    	Optional<User> u = userDao.find(id);
-    	if (u.isPresent()) {
-    		return u.get();
-    	} else {
-    		return null;
-    	}
-    }*/
-    
-    @Value("${google.clientId}")
-    private String clientId;
-    
-    @RequestMapping("/google-login")
-    public String login(@RequestParam(required = false) String state, @RequestParam(required = false) String code, @RequestParam(required = false) String scope,
-    		@RequestParam(required = false) String session_state, @RequestParam(required = false) String prompt) {
-    	StringBuilder sb = new StringBuilder();
-    	sb.append("<!DOCTYPE>");
-    	sb.append("<html>");
-    	sb.append("<head>");
-    	sb.append("<meta name=\"google-signin-client_id\" content=\""+clientId+"\">");
-    	sb.append("<script src=\"https://apis.google.com/js/platform.js\" async defer></script>");
-    	sb.append("<script>");
-    	sb.append("function onSignIn(googleUser) {\n");
-    	sb.append("	  var profile = googleUser.getBasicProfile();\n");
-                  sb.append("var id_token = googleUser.getAuthResponse().id_token;\n");
-		  sb.append("console.log('ID token: ' + id_token); "); 
-    		  sb.append("console.log('ID: ' + profile.getId()); "); // Do not send to your backend! Use an ID token instead.
-    		  sb.append("console.log('Name: ' + profile.getName()); console.log('Image URL: ' + profile.getImageUrl());");
-    		  sb.append("console.log('Email: ' + profile.getEmail());"); // This is null if the 'email' scope is not present. \n }");
-		  String chonk = "var xhr = new XMLHttpRequest();\n xhr.open('POST', 'https://demo.meta.golf/tokensignin');\n xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');\n xhr.onload = function() {\n   console.log('Signed in as: ' + xhr.responseText);\n };\n xhr.send('idtoken=' + id_token);";
-		      sb.append(chonk+"} </script>");
-    	sb.append("</head>");
-    	sb.append("<body>");
-    	String d = " ~ ";
-    	sb.append("<div class=\"g-signin2\" data-onsuccess=\"onSignIn\"></div>\n");
-    	sb.append("</body>");
-    	sb.append("</html>");
-    	return sb.toString();
-    }
-    
     @RequestMapping("/4j")
     String index2(){
-        logger.debug("This is a debug message");
-        logger.info("This is an info message");
-        logger.warn("This is a warn message");
-        logger.error("This is an error message");
+        log.debug("This is a debug message");
+        log.info("This is an info message");
+        log.warn("This is a warn message");
+        log.error("This is an error message");
         return "log test";
     }
     

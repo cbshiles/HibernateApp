@@ -32,10 +32,6 @@ import Shakti.HibernateApp.services.UserDetailsSrvc;
 @Order(0)
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 	
-//	@Autowired
-//    @Qualifier("authenticationManagerBean")
-//    private AuthenticationManager authManager;
-//	
     @Value("${app.clientId}")
     private String clientId;
  
@@ -44,15 +40,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
     
     @Value("${app.redirectPath}")
     private String redirectPath;
-
-    @Autowired
-    private ClientDetailsSrvc clientDetailsSrvc;
     
-    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired 
+    PasswordEncoder passwordEncoder;
 	
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//    
 	@Override
 	public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
 //	        clients.withClientDetails(clientDetailsSrvc);
@@ -62,13 +53,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 	                    .authorities("USER")
 	                    .redirectUris(redirectPath)
 	                    .scopes("read", "write")
-	                    .resourceIds("resource")
+	                    //.resourceIds("clientId")
 	                    .secret(passwordEncoder.encode(clientSecret));
 	}
 	
-//	@Autowired
- // private AuthenticationManager authMan;
-//	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints)
             throws Exception{
@@ -79,12 +67,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 		//.clientDetailsService(clientDetailsSrvc);
 		;
 	}
-//	
-	
-	
-//	/**/
-//	private static String REALM="CRM_REALM";
-//	
+
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
 		
@@ -112,8 +95,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
         defaultTokenServices.setTokenStore(tokenStore());
         defaultTokenServices.setSupportRefreshToken(false);
         return defaultTokenServices;
-    }
-   
+    }  
 
     @Bean
     public TokenStore tokenStore() {

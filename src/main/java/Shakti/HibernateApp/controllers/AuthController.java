@@ -86,7 +86,6 @@ public class AuthController {
     	sb.append("<script src=\"/app.js\"></script>");
     	sb.append("</head>");
     	sb.append("<body>");
-    	String d = " ~ ";
     	sb.append("<input type=\"text\" id=\"userid\"> <input type=\"password\" id=\"passwd\"> <button id=\"button\">Submit</button>");
     	sb.append("</body>");
     	sb.append("</html>");
