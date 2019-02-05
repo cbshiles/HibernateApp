@@ -41,6 +41,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
     @Value("${app.redirectPath}")
     private String redirectPath;
     
+	@Value("${app.resourceId}")
+	private String resourceId;
+    
     @Autowired 
     PasswordEncoder passwordEncoder;
 	
@@ -53,7 +56,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter{
 	                    .authorities("USER")
 	                    .redirectUris(redirectPath)
 	                    .scopes("read", "write")
-	                    //.resourceIds("clientId")
+	                    .resourceIds(resourceId)
 	                    .secret(passwordEncoder.encode(clientSecret));
 	}
 	

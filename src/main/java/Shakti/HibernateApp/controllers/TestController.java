@@ -57,46 +57,6 @@ public class TestController {
     	return "User table cleared.";
     }
     
-    //landing page between authorize & token OAuth endpoints
-    @RequestMapping("/landing")
-    public String land(@RequestParam(required = false) String code) {
-    	
-      	UriComponentsBuilder builder = 
-    			UriComponentsBuilder.fromHttpUrl("http://localhost:8080/oauth/authorize")
-    	        .queryParam("grant_type", "authorization_code")
-    	        .queryParam("client_id", clientId)
-    	        .queryParam("password", clientSecret)
-    	        .queryParam("redirect_uri", tokenRedirect);
-    	
-    	HttpHeaders headers = new HttpHeaders();
-    	headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-    	HttpEntity<?> entity = new HttpEntity<>(headers);
-
-    	String url = builder.toUriString();
-    	ResponseEntity<String> result;
-    	try {
-    	result = oauthTemplate.exchange
-    			(builder.toUriString(), HttpMethod.POST, entity, String.class);
-    	
-    	} catch (Exception ex) {
-    		log.debug(ex.getMessage());
-    	}
-    	
-    	OAuth2AccessToken result2 = oauthTemplate.getAccessToken();
-    	
-    	StringBuilder sb = new StringBuilder();
-    	sb.append("<!DOCTYPE>");
-    	sb.append("<html>");
-    	sb.append("<head>");
-
-    	sb.append("</head>");
-    	sb.append("<body>");
-    	sb.append("<p>"+code+"</p>");
-    	sb.append("</body>");
-    	sb.append("</html>");
-    	return sb.toString();
-    }
-    
     @RequestMapping("/close/hello")
     public List<User> hello(){
     	List<User> lzt = new ArrayList<User>();
