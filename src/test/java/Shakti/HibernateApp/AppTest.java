@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import Shakti.HibernateApp.daos.StuffDao;
 import Shakti.HibernateApp.entities.Stuff;
 import Shakti.HibernateApp.repositories.AuthorityRepo;
-import Shakti.HibernateApp.services.LoginService;
+import Shakti.HibernateApp.services.UserDetailsSrvc;
 import junit.framework.TestCase;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +27,7 @@ public class AppTest extends TestCase {
 	@Autowired 
 	private StuffDao stuffDao;
 	
-	@Autowired LoginService loginService;
+	@Autowired UserDetailsSrvc loginService;
 
 	@Autowired AuthorityRepo roleRepo;
 	

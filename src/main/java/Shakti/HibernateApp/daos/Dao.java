@@ -13,9 +13,9 @@ public class Dao <V, K> {
 	@Autowired
 	protected Repo<V, K> repo;
 	
-	protected void setRepo(Repo<V, K> oper) {
-		repo = oper;
-	}
+//	protected void setRepo(Repo<V, K> oper) {
+//		repo = oper;
+//	}
 	
 	@Transactional(readOnly = true)
 	public Optional<V> find(K id) {

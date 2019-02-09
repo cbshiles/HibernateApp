@@ -7,23 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import Shakti.HibernateApp.daos.StuffDao;
-import Shakti.HibernateApp.entities.User;
+import Shakti.HibernateApp.services.UserDetailsSrvc;
 
 @RestController
 public class TestController {
@@ -35,34 +26,21 @@ public class TestController {
     
     @Value("${app.clientSecret}")
     private String clientSecret;
-
-    @Value("${app.tokenRedirect}")
-    private String tokenRedirect;
-	
-    @Autowired
-    private OAuth2RestTemplate oauthTemplate;
     
     @Autowired
     StuffDao stuffDao;
+    
+    @Autowired UserDetailsSrvc userSrvc;
 	
     @RequestMapping("/")
     public String index() {
-    	//userDao.createUser("Chuck", null);
         return "Greetings from Spring Boot!";
     }
 
-    
     @RequestMapping("/close/truncate")
     public String truncate() {
     	stuffDao.truncate();
     	return "User table cleared.";
-    }
-    
-    @GetMapping("/close/hello")
-    public List<User> hello(){
-    	List<User> lzt = new ArrayList<User>();
-    	//lzt.add(userDao.createUser("Bob", null));
-    	return lzt;
     }
     
     @RequestMapping("/4j")
@@ -82,5 +60,19 @@ public class TestController {
         lzt.add("Welcome, " + username);
         return lzt;
     }
+    
+    @GetMapping("/quick")
+    public String quickMake() {
+    	try {
+    	userSrvc.createNewUser("brenan", "pass");
+    	return "user made!";
+    	} catch(Exception ex) {}
+    	return "no user";
+    }
 
+//  @GetMapping("/user/me")
+//  public Principal user(Principal principal) {
+//      return principal;
+//  }
+    
 }
