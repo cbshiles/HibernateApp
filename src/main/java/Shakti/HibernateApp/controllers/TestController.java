@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,7 +58,7 @@ public class TestController {
     	return "User table cleared.";
     }
     
-    @RequestMapping("/close/hello")
+    @GetMapping("/close/hello")
     public List<User> hello(){
     	List<User> lzt = new ArrayList<User>();
     	//lzt.add(userDao.createUser("Bob", null));
@@ -75,9 +76,11 @@ public class TestController {
     
     @RequestMapping("/close/howdy")
     @ResponseBody
-    public String home() {
+    public List<String> home() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return "Welcome, " + username;
+        List<String> lzt = new ArrayList<String>();
+        lzt.add("Welcome, " + username);
+        return lzt;
     }
 
 }

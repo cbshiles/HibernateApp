@@ -66,6 +66,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	       return authenticationManager();
 	   }
 	   
+	    @Autowired
+	    private OAuth2RestTemplate restTemplate;
+	    
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http
@@ -81,11 +84,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	        .and()	        
 //	        .addFilterAfter(new OAuth2ClientContextFilter(),
 //	          AbstractPreAuthenticatedProcessingFilter.class)
-//	        .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
+//	        .addFilterAfter(new ConnectionFilter("/login", restTemplate), OAuth2ClientContextFilter.class)
 	        //.httpBasic()	
 	        //.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginPath))
 	        .formLogin().and()
 	        .authorizeRequests()
+	        //.and().exceptionHandling()
+	        //.authenticationEntryPoint(new RestAuthenticationEntryPoint())
 	        //.anyRequest().permitAll()
 	        ;
 	    }
